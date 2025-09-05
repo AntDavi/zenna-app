@@ -21,9 +21,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { login, signup } from "./actions";
 
 // Schemas de validação
 const signInSchema = z.object({
@@ -57,7 +60,9 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  //   const { signIn, signUp, user } = useAuth();
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  const message = searchParams.get("message");
 
   // Form para Sign In
   const signInForm = useForm<SignInFormData>({
@@ -80,10 +85,12 @@ export default function Login() {
 
   const onSignIn = async (data: SignInFormData) => {
     setLoading(true);
+    const formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+
     try {
-      console.log("Sign In:", data);
-      // Aqui você chamaria sua função de login
-      // await signIn(data.email, data.password);
+      await login(formData);
     } catch (error) {
       console.error("Erro no login:", error);
     } finally {
@@ -93,10 +100,13 @@ export default function Login() {
 
   const onSignUp = async (data: SignUpFormData) => {
     setLoading(true);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+
     try {
-      console.log("Sign Up:", data);
-      // Aqui você chamaria sua função de cadastro
-      // await signUp(data.name, data.email, data.password);
+      await signup(formData);
     } catch (error) {
       console.error("Erro no cadastro:", error);
     } finally {
@@ -126,6 +136,16 @@ export default function Login() {
             <CardDescription>
               Entre com seus dados ou crie uma nova conta
             </CardDescription>
+            {error && (
+              <div className="p-3 text-sm text-red-800 bg-red-100 border border-red-200 rounded">
+                {error}
+              </div>
+            )}
+            {message && (
+              <div className="p-3 text-sm text-green-800 bg-green-100 border border-green-200 rounded">
+                {message}
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">
@@ -151,6 +171,7 @@ export default function Login() {
                               type="email"
                               placeholder="seu@email.com"
                               {...field}
+                              id="email"
                             />
                           </FormControl>
                           <FormMessage />
@@ -168,6 +189,7 @@ export default function Login() {
                               type="password"
                               placeholder="••••••••"
                               {...field}
+                              id="password"
                             />
                           </FormControl>
                           <FormMessage />
@@ -201,6 +223,7 @@ export default function Login() {
                               type="text"
                               placeholder="Seu Nome"
                               {...field}
+                              id="name"
                             />
                           </FormControl>
                           <FormMessage />
@@ -218,6 +241,7 @@ export default function Login() {
                               type="email"
                               placeholder="seu@email.com"
                               {...field}
+                              id="email"
                             />
                           </FormControl>
                           <FormMessage />
@@ -235,6 +259,7 @@ export default function Login() {
                               type="password"
                               placeholder="••••••••"
                               {...field}
+                              id="password"
                             />
                           </FormControl>
                           <FormMessage />

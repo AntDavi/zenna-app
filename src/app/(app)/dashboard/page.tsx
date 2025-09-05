@@ -6,6 +6,8 @@ import DashboardInfoCards from "./_components/DashboardInfoCards";
 import DashboardPieChart from "./_components/DashboardPieChart";
 import DashboardBarsChart from "./_components/DashboardBarsChart";
 import TransactionsDataTable from "@/components/TransactionsDataTable";
+import { Button } from "@/components/ui/button";
+import { Minus, Plus } from "lucide-react";
 
 export default function Dashboard() {
   const [dateFilter, setDateFilter] = useState<DateFilterType>("month");
@@ -15,7 +17,19 @@ export default function Dashboard() {
   return (
     <section className="flex flex-col min-h-screen">
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+        <div className="flex items-center justify-between mt-8 flex-col md:flex-row">
+          <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+          <div className="flex flex-row md:items-center mb-4 gap-4">
+            <Button>
+              <Plus className="mr-2" />
+              Nova Entrada
+            </Button>
+            <Button variant="destructive">
+              <Minus className="mr-2" />
+              Nova Saída
+            </Button>
+          </div>
+        </div>
 
         {/* Filtro de Datas */}
         {/* <DateFilter

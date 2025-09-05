@@ -11,9 +11,12 @@ import { usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { signOut } from "@/app/(auth)/signout/actions";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: <ChartPie />, isActive: true },
@@ -98,10 +101,15 @@ export default function AppHeader() {
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel className="cursor-pointer flex items-center gap-2">
-                <LogOut size={16} />
+              <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer text-red-600"
+                onClick={() => signOut()}
+              >
+                <LogOut size={16} className="mr-2" />
                 Sair
-              </DropdownMenuLabel>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
