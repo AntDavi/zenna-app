@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 
-import { ChartPie, HandCoins, LogOut, MenuIcon, Settings } from "lucide-react";
+import { ChartPie, HandCoins, LogOut, MenuIcon, Tag } from "lucide-react";
 import React from "react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
@@ -27,9 +27,9 @@ const navigation = [
     isActive: false,
   },
   {
-    name: "Configurações",
-    href: "/settings",
-    icon: <Settings />,
+    name: "Categorias",
+    href: "/categories",
+    icon: <Tag />,
     isActive: false,
   },
 ];

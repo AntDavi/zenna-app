@@ -21,7 +21,6 @@ export default async function LandingPage() {
       <header className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Image src="/zenna.svg" alt="Zenna Logo" width={60} height={60} />
-          <span className="text-2xl font-bold">Zenna</span>
         </div>
         <div className="flex items-center gap-4">
           {data?.user ? (
