@@ -18,7 +18,7 @@ export default function Dashboard() {
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
         {/* Filtro de Datas */}
-        <DateFilter
+        {/* <DateFilter
           filterType={"today"}
           onFilterChange={function (
             type: DateFilterType,
@@ -27,7 +27,7 @@ export default function Dashboard() {
           ): void {
             throw new Error("Function not implemented.");
           }}
-        />
+        /> */}
 
         {/* Cards de Informação */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">

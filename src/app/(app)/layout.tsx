@@ -8,9 +8,9 @@ export default function AuthLayout({
   return (
     <html lang="pt-br">
       <body>
-        <AppHeader />
         <main className="w-full">
-          <div className="p-6 ">{children}</div>
+          <AppHeader />
+          <div className="p-4">{children}</div>
         </main>
       </body>
     </html>

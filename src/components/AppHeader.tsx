@@ -36,7 +36,7 @@ export default function AppHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border shadow-md ">
-      <div className="flex items-center justify-between container mx-auto py-3">
+      <div className="flex items-center justify-between container mx-auto py-3 px-4">
         <Image src="/zenna.svg" alt="Logo" width={80} height={80} />
 
         <div className="flex items-center gap-8">

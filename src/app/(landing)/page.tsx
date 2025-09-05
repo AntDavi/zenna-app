@@ -4,9 +4,9 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-        <Button>
-            <Link href="/dashboard">Go to Dashboard</Link>
-        </Button>
+      <Button>
+        <Link href="/login">Go to Login</Link>
+      </Button>
     </div>
   );
 }
