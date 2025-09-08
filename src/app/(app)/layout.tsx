@@ -1,6 +1,7 @@
 import AppHeader from "@/components/AppHeader";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
+import { DateFilterProvider } from "@/contexts/DateFilterContext";
 
 export default async function AuthLayout({
   children,
@@ -17,8 +18,10 @@ export default async function AuthLayout({
     <html lang="pt-br">
       <body>
         <main className="w-full">
-          <AppHeader />
-          <div className="p-4">{children}</div>
+          <DateFilterProvider>
+            <AppHeader />
+            <div className="p-4">{children}</div>
+          </DateFilterProvider>
         </main>
       </body>
     </html>
