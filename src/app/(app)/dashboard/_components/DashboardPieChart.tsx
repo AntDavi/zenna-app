@@ -52,7 +52,7 @@ export default function DashboardPieChart() {
   }, []);
 
   return (
-    <div className="flex flex-row items-center justify-center w-full gap-4">
+    <div className="flex flex-col md:flex-row items-center justify-center w-full gap-4">
       {/* Receita */}
       <Card className="shadow-md border w-full">
         <CardHeader>

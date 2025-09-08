@@ -2,7 +2,7 @@ import DashboardPieChart from "./_components/DashboardPieChart";
 import DashboardBarsChart from "./_components/DashboardBarsChart";
 import TransactionsDataTable from "@/components/TransactionsDataTable";
 import ModalAddTransaction from "./_components/ModalAddTransaction";
-import { DashboardInfoCards } from "./_components/DashboardInfoCards";
+import DashboardInfoCards from "./_components/DashboardInfoCards";
 
 export default function Dashboard() {
   return (
@@ -50,7 +50,7 @@ export default function Dashboard() {
           <DashboardInfoCards
             title="Total"
             value={10000}
-            type="neutral"
+            type="total"
             percentChange={2.5}
           />
         </div>
@@ -58,7 +58,7 @@ export default function Dashboard() {
         {/* Gráficos e Outras Informações */}
         <div className="flex flex-col gap-4 mt-6 mb-6">
           <DashboardPieChart />
-          <DashboardBarsChart />
+          {/* <DashboardBarsChart /> */}
         </div>
 
         {/* Transações */}
