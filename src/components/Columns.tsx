@@ -11,22 +11,71 @@ import {
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
 import { ArrowUp, ArrowDown, Edit, Trash2, MoreHorizontal } from "lucide-react";
-import { getCategoriesByType } from "@/types/categories";
 import { Transaction } from "@/types/transactions";
+import { Category } from "@/types/category";
+import ModalEditTransaction from "./ModalEditTransaction";
+import ModalDeleteTransaction from "./ModalDeleteTransaction";
+import { useState } from "react";
+import { formatCurrency, formatDate } from "@/lib/formatters";
 
-const formatBRL = (value: string) =>
-  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-    Number.parseFloat(value || "0")
+// Interface para transação com categoria expandida (como vem do Supabase)
+interface TransactionWithCategory extends Transaction {
+  categories?: Category;
+}
+
+// Componente para ações da linha
+function RowActions({ transaction }: { transaction: TransactionWithCategory }) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover:bg-accent"
+            aria-label="Abrir menu de ações"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem
+            onClick={() => setIsEditOpen(true)}
+            className="cursor-pointer"
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Editar
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setIsDeleteOpen(true)}
+            className="cursor-pointer text-destructive focus:text-destructive"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ModalEditTransaction
+        transaction={transaction}
+        isOpen={isEditOpen}
+        onOpenChange={setIsEditOpen}
+      />
+
+      <ModalDeleteTransaction
+        transaction={transaction}
+        isOpen={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+      />
+    </>
   );
+}
 
-const formatDate = (d: Date) =>
-  new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(d);
-
-// busca categoria respeitando o tipo para evitar colisão de IDs
-const getCategorySafe = (category_id: string, type: "income" | "expense") =>
-  getCategoriesByType(type).find((c) => c.id === category_id);
-
-export const columns: ColumnDef<Transaction>[] = [
+export const columns: ColumnDef<TransactionWithCategory>[] = [
   // 1) tipo (bolinha + seta)
   {
     accessorKey: "type",
@@ -60,11 +109,11 @@ export const columns: ColumnDef<Transaction>[] = [
     accessorKey: "category_id",
     header: "Categoria",
     cell: ({ row }) => {
-      const cat = getCategorySafe(row.original.category_id, row.original.type);
-      if (!cat) return <span className="text-muted-foreground">—</span>;
+      const category = row.original.categories;
+      if (!category) return <span className="text-muted-foreground">—</span>;
       return (
         <Badge className="gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium bg-popover-foreground/10 border border-popover-foreground/20 text-black dark:text-white">
-          <span>{cat.name}</span>
+          <span>{category.name}</span>
         </Badge>
       );
     },
@@ -76,16 +125,15 @@ export const columns: ColumnDef<Transaction>[] = [
       <div className="max-w-[340px] truncate">{row.original.description}</div>
     ),
   },
-
   {
-    accessorKey: "date",
+    accessorKey: "transaction_date",
     header: "Data",
     cell: ({ row }) => {
-      const d =
-        row.original.date instanceof Date
-          ? row.original.date
-          : new Date(row.original.date);
-      return <span className="tabular-nums">{formatDate(d)}</span>;
+      return (
+        <span className="tabular-nums">
+          {formatDate(row.original.transaction_date)}
+        </span>
+      );
     },
   },
   {
@@ -93,7 +141,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: () => <div className="text-right">Valor</div>,
     cell: ({ row }) => (
       <div className="text-right font-medium tabular-nums">
-        {formatBRL(row.original.amount)}
+        {formatCurrency(row.original.amount)}
       </div>
     ),
   },
@@ -102,41 +150,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: () => <div className="text-right">Ações</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 hover:bg-accent"
-              aria-label="Abrir menu de ações"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem
-              onClick={() => {
-                // Implementar editar
-                console.log("Editar transação:", row.original);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Editar
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                // Implementar excluir
-                console.log("Excluir transação:", row.original);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Excluir
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <RowActions transaction={row.original} />
       </div>
     ),
     enableHiding: false,

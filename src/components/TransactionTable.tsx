@@ -18,10 +18,16 @@ import {
 } from "./ui/table";
 import { Button } from "./ui/button";
 import { Transaction } from "@/types/transactions";
+import { Category } from "@/types/category";
+
+// Interface para transação com categoria expandida (como vem do Supabase)
+interface TransactionWithCategory extends Transaction {
+  categories?: Category;
+}
 
 interface Props {
-  columns: ColumnDef<Transaction, unknown>[];
-  data: Transaction[];
+  columns: ColumnDef<TransactionWithCategory, unknown>[];
+  data: TransactionWithCategory[];
 }
 
 export default function TransactionsTable({ columns, data }: Props) {
@@ -86,7 +92,7 @@ export default function TransactionsTable({ columns, data }: Props) {
                 colSpan={columns.length}
                 className="h-24 text-center text-muted-foreground"
               >
-                Nenhuma transação.
+                Nenhuma transação encontrada.
               </TableCell>
             </TableRow>
           )}
@@ -96,14 +102,20 @@ export default function TransactionsTable({ columns, data }: Props) {
       {/* Paginação */}
       <div className="flex flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-sm text-muted-foreground">
-          Página <span className="font-medium">{page}</span> de{" "}
-          <span className="font-medium">{pageCount || 1}</span>
-          <span className="mx-2">·</span>
-          Exibindo{" "}
-          <span className="font-medium">
-            {total ? `${firstIdx}–${lastIdx}` : 0}
-          </span>{" "}
-          de <span className="font-medium">{total}</span>
+          {total > 0 ? (
+            <>
+              Página <span className="font-medium">{page}</span> de{" "}
+              <span className="font-medium">{pageCount || 1}</span>
+              <span className="mx-2">·</span>
+              Exibindo{" "}
+              <span className="font-medium">
+                {total ? `${firstIdx}–${lastIdx}` : 0}
+              </span>{" "}
+              de <span className="font-medium">{total}</span>
+            </>
+          ) : (
+            "Nenhuma transação para exibir"
+          )}
         </div>
 
         <div className="flex items-center gap-2">

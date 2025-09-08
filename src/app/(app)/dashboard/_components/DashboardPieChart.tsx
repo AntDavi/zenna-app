@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChartIcon } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
@@ -50,12 +52,12 @@ export default function DashboardPieChart() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-row items-center justify-center w-full gap-4">
       {/* Receita */}
-      <Card className="shadow-md border te">
+      <Card className="shadow-md border w-full">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-card-foreground flex items-center gap-2">
-            <div className="p-2 bg-income-light rounded-lg">
+            <div className="p-2 rounded-lg">
               <PieChartIcon className="w-5 h-5 text-income" />
             </div>
             Receitas por Categoria
@@ -114,7 +116,7 @@ export default function DashboardPieChart() {
       </Card>
 
       {/* Despesa */}
-      <Card className="shadow-md border">
+      <Card className="shadow-md border w-full">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-card-foreground flex items-center gap-2">
             <div className="p-2 bg-expense-light rounded-lg">

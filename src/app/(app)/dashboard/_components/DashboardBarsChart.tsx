@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, Cell } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -50,59 +50,7 @@ export default function DashboardBarsChart() {
         </CardTitle>
       </CardHeader>
       <CardContent className="">
-        {/* 📱 (2) MOBILE / COLUNA INTEIRA: gráfico HORIZONTAL (barras deitadas)
-              - Mostrado por padrão; some em lg+ */}
-        <div className="hidden lg:block">
-          <ChartContainer config={chartConfig} className="h-full">
-            <BarChart
-              accessibilityLayer
-              data={chartData}
-              layout="vertical" // chave para barras horizontais
-              margin={{ left: 0 }}
-            >
-              <CartesianGrid vertical={false} />
-              {/* YAxis categórico com os meses (à esquerda) */}
-              <YAxis
-                dataKey="month"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(v) => String(v).slice(0, 3)} // ex.: "Jan"
-              />
-              {/* XAxis numérico (valores) pode ficar oculto para um visual mais limpo */}
-              <XAxis type="number" hide />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar
-                dataKey="income"
-                layout="vertical"
-                fill="var(--color-income)"
-                radius={5}
-              />
-              <Bar
-                dataKey="expense"
-                layout="vertical"
-                fill="var(--color-expense)"
-                radius={5}
-              />
-              <Bar dataKey="balance" layout="vertical" radius={5}>
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={getBalanceColor(entry.balance)}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ChartContainer>
-        </div>
-
-        {/* 🖥️ (3) LG+ / MEIA COLUNA: gráfico VERTICAL (barras em pé)
-              - Oculto no mobile; visível em lg+ */}
-        <div className="block lg:hidden">
+        <div className="">
           <ChartContainer config={chartConfig}>
             <BarChart accessibilityLayer data={chartData}>
               <CartesianGrid vertical={false} />

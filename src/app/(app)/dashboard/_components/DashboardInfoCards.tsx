@@ -1,77 +1,106 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DollarSign,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  Wallet,
-} from "lucide-react";
-import React from "react";
+import { TrendingUp, TrendingDown, Wallet, DollarSign } from "lucide-react";
 
-const DashboardIcons = {
-  income: <ArrowUpCircle />,
-  expense: <ArrowDownCircle />,
-  balance: <DollarSign />,
-  total: <Wallet />,
-};
-
-export interface DashboardInfoCardsProps {
+export interface FinancialCardProps {
+  type: "income" | "expense" | "balance" | "neutral";
   title: string;
-  amount: number;
-  type: "income" | "expense" | "balance" | "total";
-  percentage: number;
+  value: number;
+  percentChange: number; // Ex: -8.2 ou 12.5
+  isLoading?: boolean;
+  icon?: React.ElementType;
+  className?: string;
 }
 
-export default function DashboardInfoCards({
-  title,
-  amount,
+export function DashboardInfoCards({
   type,
-  percentage,
-}: DashboardInfoCardsProps) {
+  title,
+  value,
+  percentChange,
+  isLoading = false,
+  icon,
+  className = "",
+}: FinancialCardProps) {
+  const Icon =
+    icon ||
+    (type === "income"
+      ? TrendingUp
+      : type === "expense"
+      ? TrendingDown
+      : type === "balance"
+      ? DollarSign
+      : Wallet);
+
+  const formatCurrency = (val: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(val);
+  };
+
+  // Cor da porcentagem
+  const percentColor =
+    percentChange > 0
+      ? "text-green-500"
+      : percentChange < 0
+      ? "text-red-500"
+      : "text-muted-foreground";
+  const percentPrefix = percentChange > 0 ? "+" : "";
+
   return (
     <Card
-      className={
-        type === "income"
-          ? "bg-green-100"
-          : type === "expense"
-          ? "bg-red-100"
-          : type === "balance"
-          ? "bg-blue-100"
-          : "bg-gray-100"
-      }
+      className={`shadow-sm border-border transition-all duration-300
+                ${type === "income" ? "border-l-4 border-l-income" : ""}
+                ${type === "expense" ? "border-l-4 border-l-expense" : ""}
+                ${
+                  type === "balance"
+                    ? value < 0
+                      ? "border-l-4 border-l-expense"
+                      : "border-l-4 border-l-income"
+                    : ""
+                }
+                ${type === "neutral" ? "border-l-4 border-l-neutral" : ""}
+                ${className}`}
     >
-      <CardHeader>
-        {DashboardIcons[type]}
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        <CardTitle className="text-sm font-medium text-card-foreground">
+          {title}
+        </CardTitle>
+        <div
+          className={`p-2 rounded-lg
+                    ${type === "income" ? "bg-income-light text-income" : ""}
+                    ${type === "expense" ? "bg-expense-light text-expense" : ""}
+                    ${
+                      type === "balance"
+                        ? value < 0
+                          ? "bg-expense-light text-expense"
+                          : "bg-income-light text-income"
+                        : ""
+                    }
+                    ${
+                      type === "neutral" ? "bg-muted text-muted-foreground" : ""
+                    }
+                `}
+        >
+          <Icon className="h-4 w-4" />
+        </div>
       </CardHeader>
       <CardContent>
-        {type === "total" ? (
-          <p className="text-2xl font-bold">{amount}</p>
-        ) : (
-          <p className="text-2xl font-bold">
-            {amount.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </p>
-        )}
-
-        {percentage >= 0 ? (
-          <p className="text-green-600 font-medium">
-            {`+${percentage.toFixed(1)}%`}
-            <span className="text-foreground">
-              {" "}
-              em relação ao periodo passado
-            </span>
-          </p>
-        ) : (
-          <p className="text-red-600 font-medium">
-            {`-${Math.abs(percentage).toFixed(1)}%`}
-            <span className="text-foreground">
-              {" "}
-              em relação ao periodo passado
-            </span>
-          </p>
-        )}
+        <div className="text-2xl font-bold text-card-foreground">
+          {isLoading ? (
+            <div className="h-8 bg-muted rounded animate-pulse" />
+          ) : type === "neutral" ? (
+            value
+          ) : (
+            formatCurrency(value)
+          )}
+        </div>
+        <p className={`text-xs flex items-center gap-1 mt-1 ${percentColor}`}>
+          <span>
+            {percentPrefix}
+            {percentChange}%
+          </span>
+          <span className="text-muted-foreground">vs período anterior</span>
+        </p>
       </CardContent>
     </Card>
   );

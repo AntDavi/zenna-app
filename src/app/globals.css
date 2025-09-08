@@ -66,6 +66,19 @@
     --shadow-opacity: var(--shadow-opacity);
     --color-shadow-color: var(--shadow-color);
     --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-income: var(--income);
+    --color-income-light: var(--income-light);
+    --color-income-dark: var(--income-dark);
+    --color-expense: var(--expense);
+    --color-expense-light: var(--expense-light);
+    --color-expense-dark: var(--expense-dark);
+    --color-neutral: var(--neutral-light);
+    --color-neutral: var(--neutral);
+    --color-neutral: var(--neutral-dark);
+
+    --color-balance-positive: var(--balance-positive);
+    --color-balance-negative: var(--balance-negative);
 }
 
 :root {
@@ -123,8 +136,18 @@
     --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
     --tracking-normal: 0em;
 
-    --income: oklch(0.6368 0.2078 134.6686);
-    --expense: oklch(0.6368 0.2078 25.3313);
+    --income: oklch(0.62 0.16 140.0);
+    --income-light: oklch(94.246% 0.08031 140.182);
+    --income-dark: oklch(0.40 0.22 140.0);
+
+    --expense: oklch(0.58 0.20 25.0);
+    --expense-light: oklch(0.86 0.10 25.0);
+    --expense-dark: oklch(0.36 0.28 25.0);
+
+    --neutral: oklch(0.40 0.03 260.0);
+    --neutral-light: oklch(0.92 0.01 260.0);
+    --neutral-dark: oklch(0.18 0.05 260.0);
+
     --balance-positive: oklch(0.5077 0.1283 145.2873);
     --balance-negative: oklch(0.5077 0.1283 25.3313);
 }
