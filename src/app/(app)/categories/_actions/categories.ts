@@ -15,6 +15,7 @@ const categorySchema = z.object({
     .max(50, "Nome deve ter no máximo 50 caracteres")
     .trim(),
   type: z.enum(["income", "expense"]),
+  color: z.string().regex(/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/, "Cor inválida"),
 });
 
 export async function addCategoryAction(formData: FormData) {
@@ -23,6 +24,7 @@ export async function addCategoryAction(formData: FormData) {
     const validatedFields = categorySchema.safeParse({
       name: formData.get("name"),
       type: formData.get("type"),
+      color: formData.get("color"),
     });
 
     if (!validatedFields.success) {
@@ -66,6 +68,7 @@ export async function updateCategoryAction(formData: FormData) {
     const validatedFields = categorySchema.safeParse({
       name: formData.get("name"),
       type: formData.get("type"),
+      color: formData.get("color"),
     });
 
     if (!validatedFields.success) {

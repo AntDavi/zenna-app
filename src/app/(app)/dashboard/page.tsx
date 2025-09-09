@@ -1,8 +1,9 @@
 import DashboardPieChart from "./_components/DashboardPieChart";
 import TransactionsDataTableGlobal from "@/components/TransactionsDataTableGlobal";
 import ModalAddTransaction from "./_components/ModalAddTransaction";
-import DashboardInfoCardsGlobal from "@/components/DashboardInfoCardsGlobal";
+
 import DateFilter from "@/components/DateFilter";
+import DashboardInfoCardsGlobal from "./_components/DashboardInfoCardsGlobal";
 
 export default function Dashboard() {
   return (

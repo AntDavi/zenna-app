@@ -46,6 +46,7 @@ import {
   updateCategoryAction,
   deleteCategoryAction,
 } from "../_actions/categories";
+import { ColorPicker } from "./ColorPicker";
 
 const categorySchema = z.object({
   name: z
@@ -54,6 +55,12 @@ const categorySchema = z.object({
     .max(50, "Nome deve ter no máximo 50 caracteres")
     .trim(),
   type: z.enum(["income", "expense"]),
+  color: z
+    .string()
+    .regex(
+      /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/,
+      "Cor deve ser um hexadecimal válido"
+    ),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -62,17 +69,28 @@ export interface CategorieCardProps {
   id: string;
   title: string;
   type: "income" | "expense";
+  color?: string;
 }
 
-export const CategorieCard = ({ id, title, type }: CategorieCardProps) => {
+export const CategorieCard = ({
+  id,
+  title,
+  type,
+  color,
+}: CategorieCardProps) => {
   const [editOpen, setEditOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Cor padrão baseada no tipo se não houver cor personalizada
+  const defaultColor = type === "income" ? "#22c55e" : "#ef4444";
+  const categoryColor = color || defaultColor;
 
   const form = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: title,
       type: type,
+      color: categoryColor,
     },
   });
 
@@ -83,6 +101,7 @@ export const CategorieCard = ({ id, title, type }: CategorieCardProps) => {
       formData.append("id", id);
       formData.append("name", data.name);
       formData.append("type", data.type);
+      formData.append("color", data.color);
 
       const result = await updateCategoryAction(formData);
 
@@ -122,22 +141,18 @@ export const CategorieCard = ({ id, title, type }: CategorieCardProps) => {
   };
 
   return (
-    <Card
-      className={`${
-        type === "income"
-          ? "border-green-200 bg-green-50"
-          : "border-red-200 bg-red-50"
-      } hover:shadow-md transition-shadow`}
-    >
+    <Card className="border hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div
-              className={`w-3 h-3 rounded-full ${
-                type === "income" ? "bg-green-500" : "bg-red-500"
-              }`}
+              className="w-4 h-4 rounded-full border border-gray-200"
+              style={{ backgroundColor: categoryColor }}
             ></div>
             <CardTitle className="text-sm font-medium">{title}</CardTitle>
+            <span className="text-xs text-muted-foreground bg-gray-100 px-2 py-1 rounded-full">
+              {type === "income" ? "Receita" : "Despesa"}
+            </span>
           </div>
           <div className="flex gap-1">
             {/* Botão de Editar */}
@@ -207,6 +222,23 @@ export const CategorieCard = ({ id, title, type }: CategorieCardProps) => {
                               </SelectItem>
                             </SelectContent>
                           </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="color"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Cor da Categoria</FormLabel>
+                          <FormControl>
+                            <ColorPicker
+                              color={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}

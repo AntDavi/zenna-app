@@ -5,17 +5,20 @@ export interface Category {
   type: "income" | "expense";
   created_at: string;
   updated_at: string;
+  color?: string;
 }
 
 export interface CategoryInsert {
   name: string;
   type: "income" | "expense";
   user_id: string;
+  color?: string;
 }
 
 export interface CategoryUpdate {
   name?: string;
   type?: "income" | "expense";
+  color?: string;
 }
 
 export type CategoryType = "income" | "expense";

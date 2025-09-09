@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { addCategoryAction } from "../_actions/categories";
 import { toast } from "sonner";
+import { ColorPicker } from "./ColorPicker";
 
 // Schema de validação
 const categorySchema = z.object({
@@ -39,9 +40,13 @@ const categorySchema = z.object({
     .min(2, "Nome deve ter pelo menos 2 caracteres")
     .max(50, "Nome deve ter no máximo 50 caracteres")
     .trim(),
-  type: z.enum(["income", "expense"]).refine((val) => val !== undefined, {
-    message: "Selecione o tipo da categoria",
-  }),
+  type: z.enum(["income", "expense"]),
+  color: z
+    .string()
+    .regex(
+      /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/,
+      "Cor deve ser um hexadecimal válido"
+    ),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -50,12 +55,12 @@ export default function ModalAddCategorie() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Configuração do formulário
   const form = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
-      type: undefined,
+      type: "income",
+      color: "#3b82f6",
     },
   });
 
@@ -66,6 +71,7 @@ export default function ModalAddCategorie() {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("type", data.type);
+      formData.append("color", data.color);
 
       // Chamar a server action
       const result = await addCategoryAction(formData);
@@ -148,6 +154,23 @@ export default function ModalAddCategorie() {
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cor da Categoria</FormLabel>
+                  <FormControl>
+                    <ColorPicker
+                      color={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

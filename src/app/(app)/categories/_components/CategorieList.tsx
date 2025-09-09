@@ -30,6 +30,7 @@ export async function CategoriesList() {
                     id={category.id}
                     title={category.name}
                     type={category.type}
+                    color={category.color}
                   />
                 ))
               ) : (
@@ -58,6 +59,7 @@ export async function CategoriesList() {
                     id={category.id}
                     title={category.name}
                     type={category.type}
+                    color={category.color}
                   />
                 ))
               ) : (
